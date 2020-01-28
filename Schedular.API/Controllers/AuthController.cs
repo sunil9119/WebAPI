@@ -52,39 +52,40 @@ namespace Schedular.API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginUserDTO objDTO)
         {
-            var userFromRepo = await _repo.Login(objDTO.Username.ToLower(), objDTO.Password);
+            throw new Exception("say no");
 
-            if (objDTO == null)
-            {
-                return Unauthorized();
-            }
+                var userFromRepo = await _repo.Login(objDTO.Username.ToLower(), objDTO.Password);
 
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.NameIdentifier, userFromRepo.Id.ToString()),
-                new Claim(ClaimTypes.Name, userFromRepo.Username.ToString())
-            };
-            var key = new SymmetricSecurityKey(Encoding.UTF8
-            .GetBytes(_config.GetSection("AppSettings:Token").Value));
+                if (objDTO == null)
+                {
+                    return Unauthorized();
+                }
 
-            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+                var claims = new[]
+                {
+                    new Claim(ClaimTypes.NameIdentifier, userFromRepo.Id.ToString()),
+                    new Claim(ClaimTypes.Name, userFromRepo.Username.ToString())
+                };
+                var key = new SymmetricSecurityKey(Encoding.UTF8
+                .GetBytes(_config.GetSection("AppSettings:Token").Value));
 
-            var tokenDesc = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddDays(1), // Should be UTC.Now
-                SigningCredentials = credentials
-            };
+                var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
-            var tokenHandler = new JwtSecurityTokenHandler();
+                var tokenDesc = new SecurityTokenDescriptor
+                {
+                    Subject = new ClaimsIdentity(claims),
+                    Expires = DateTime.Now.AddDays(1), // Should be UTC.Now
+                    SigningCredentials = credentials
+                };
 
-            var token = tokenHandler.CreateToken(tokenDesc);
+                var tokenHandler = new JwtSecurityTokenHandler();
 
-            return Ok(new
-            {
-                token = tokenHandler.WriteToken(token)
-            });
+                var token = tokenHandler.CreateToken(tokenDesc);
 
+                return Ok(new
+                {
+                    token = tokenHandler.WriteToken(token)
+                });
         }
 
     }
