@@ -56,16 +56,16 @@ namespace Schedular.API.Controllers
 
             var userFromRepo = await _repo.Login(objDTO.Username.ToLower(), objDTO.Password);
 
-            if (objDTO == null)
+            if (userFromRepo == null)
             {
                 return Unauthorized();
             }
 
             var claims = new[]
             {
-                    new Claim(ClaimTypes.NameIdentifier, userFromRepo.Id.ToString()),
-                    new Claim(ClaimTypes.Name, userFromRepo.Username.ToString())
-                };
+                new Claim(ClaimTypes.NameIdentifier, userFromRepo.Id.ToString()),
+                new Claim(ClaimTypes.Name, userFromRepo.Username.ToString())
+            };
             var key = new SymmetricSecurityKey(Encoding.UTF8
             .GetBytes(_config.GetSection("AppSettings:Token").Value));
 
