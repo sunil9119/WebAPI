@@ -22,10 +22,12 @@ namespace Schedular.API.DTO
         [Required]
         public string Country { get; set; }
         public DateTime Created { get; set; }
+        public DateTime LastActive { get; set; }
 
         public RegisterUserDTO()
         {
             Created = DateTime.Now;
+            LastActive = DateTime.Now;
         }
     }
 }

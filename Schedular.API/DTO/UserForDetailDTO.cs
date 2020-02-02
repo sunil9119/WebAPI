@@ -12,6 +12,7 @@ namespace Schedular.API.DTO
         public int Age { get; set; }
         public string KnownAs { get; set; }
         public DateTime Created { get; set; }
+        public DateTime LastActive { get; set; }
         public string Intro { get; set; }
         public string LookingFor { get; set; }
         public string Interests { get; set; }
