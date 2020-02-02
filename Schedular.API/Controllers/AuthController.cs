@@ -36,14 +36,13 @@ namespace Schedular.API.Controllers
             {
                 return BadRequest("User already registered.");
             }
-            var userToCreate = new User
-            {
-                Username = objDTO.Username
-            };
+            var userToCreate = _mapper.Map<User>(objDTO);
 
             var createdUser = await _repo.Register(userToCreate, objDTO.Password);
 
-            return StatusCode(201);
+            var userToReturn = _mapper.Map<UserForDetailDTO>(createdUser);
+
+            return CreatedAtRoute("GetUser", new{controller="Users", id=createdUser.Id},userToReturn);
         }
 
         //JWT  structure - Header Algo Type, Payload identifier Info, uname and other decodable info exp valit until
