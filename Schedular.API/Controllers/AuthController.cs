@@ -9,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using Schedular.API.Data;
 using Schedular.API.DTO;
 using Schedular.API.Models;
+using AutoMapper;
 
 namespace Schedular.API.Controllers
 {
@@ -18,8 +19,10 @@ namespace Schedular.API.Controllers
     {
         private readonly IAuthRepository _repo;
         private readonly IConfiguration _config;
-        public AuthController(IAuthRepository repo, IConfiguration config)
+        private readonly IMapper _mapper;
+        public AuthController(IAuthRepository repo, IConfiguration config, IMapper mapper)
         {
+            _mapper = mapper;
             _config = config;
             _repo = repo;
         }
@@ -81,10 +84,12 @@ namespace Schedular.API.Controllers
             var tokenHandler = new JwtSecurityTokenHandler();
 
             var token = tokenHandler.CreateToken(tokenDesc);
+            var user = _mapper.Map<UserForListDTO>(userFromRepo);
 
             return Ok(new
             {
-                token = tokenHandler.WriteToken(token)
+                token = tokenHandler.WriteToken(token),
+                user
             });
         }
 

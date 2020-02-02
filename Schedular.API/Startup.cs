@@ -36,6 +36,7 @@ namespace Schedular.API
                     Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             });
             services.AddCors();
+            services.Configure<CloudinarySetting>(Configuration.GetSection("CloudinarySetting"));
             services.AddAutoMapper(typeof(SchedularRepository).Assembly);
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<ISchedular, SchedularRepository>();
