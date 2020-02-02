@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Schedular.API.Data;
 using Schedular.API.DTO;
 using Schedular.API.Helpers;
+using Schedular.API.Models;
 
 namespace Schedular.API.Controllers
 {
@@ -63,6 +64,37 @@ namespace Schedular.API.Controllers
                 return NoContent();
 
             throw new Exception($"Updating user {id} failed on save");
+        }
+
+        [HttpPost("{id}/like/{recipientId}")]
+        public async Task<IActionResult> LikeUser(int id, int recipientId)
+        {
+            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return Unauthorized();
+
+            var like = await _repo.GetLike(id, recipientId);
+
+            if (like != null)
+                return BadRequest("You already like this user");
+
+            if (await _repo.GetUser(recipientId) == null)
+                return NotFound();
+
+            // create like entity
+            like = new Like
+            {
+                LikerId = id,
+                LikeeId = recipientId
+            };
+
+            // Add like entity
+            _repo.Add<Like>(like);
+
+            // Save all
+            if (await _repo.SaveAll())
+                return Ok();
+
+            return BadRequest("Failed to like user");
         }
     }
 }
