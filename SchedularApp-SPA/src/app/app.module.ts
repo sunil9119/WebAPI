@@ -33,6 +33,8 @@ import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guard';
 import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
 import { appRoutes } from './routes';
 import { ListsResolver } from './_resolvers/lists.resolver';
+import { MessagesResolver } from './_resolvers/messages.resolver';
+import { MemberMessagesComponent } from './members/member-messages/member-messages.component';
 
 
 export function tokenGetter() {
@@ -58,7 +60,9 @@ export class CustomHammerConfig extends HammerGestureConfig  {
       MemberDetailComponent,
       MemberEditComponent,
       PhotoEditorComponent,
-      TimeAgoPipe
+      TimeAgoPipe,
+      MemberMessagesComponent,
+      MessagesComponent
    ],
    imports: [
       BrowserModule,
@@ -90,6 +94,7 @@ export class CustomHammerConfig extends HammerGestureConfig  {
       MemberEditResolver,
       PreventUnsavedChanges,
       ListsResolver,
+      MessagesResolver,
       { provide: HAMMER_GESTURE_CONFIG, useClass: CustomHammerConfig }
    ],
    bootstrap: [
